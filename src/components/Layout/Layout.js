@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Aux from '../../hoc/Aux'
-import SideDrawer from '../Navigation/SideDrawer/SideDrawer'
+// import SideDrawer from '../Navigation/SideDrawer/SideDrawer'
 
 class Layout extends Component {
   state = {
@@ -14,10 +14,14 @@ toggleSideDrawer = () => {
 }
 
   render() {
+    console.log(this.state.showSideDrawer)
     return (
       <Aux>
-        <SideDrawer />
-        <button onClick={this.toggleSideDrawer}>Click Me!</button>
+        {/* <SideDrawer open={this.state.showSideDrawer} /> */}
+        <p>toolbar goes here</p>
+        <main>
+          {this.props.children}
+        </main>
       </Aux>
     )
   }
