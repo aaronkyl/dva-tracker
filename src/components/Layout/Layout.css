@@ -1,3 +1,4 @@
 .Layout {
-  background-color: #ECEFF1
+  background-color: #ECEFF1;
+  min-height: 100vh; /* need to make this a calc to remocve the Toolbar height*/
 }

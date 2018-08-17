@@ -1,6 +1,6 @@
 import React from 'react'
 import classes from './PurchaseHistory.css'
-import Purchase from './Purhcase/Purchse'
+import Purchase from './Purchase/Purchase'
 
 const purchaseHistory = (props) => {
   const purchases = props.purchases.map(purchase => {

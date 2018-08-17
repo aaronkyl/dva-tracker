@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Layout from '../../components/Layout/Layout'
-import PurchaseHistory from '../../components/PurchaseHistory/PurchaseHistory'
+import PurchaseHistory from '../../components/Tracker/PurchaseHistory/PurchaseHistory'
+import NewPurchase from '../../components/Tracker/NewPurchase/NewPurchase'
 
 class DVATracker extends Component {
   state = {
@@ -24,7 +25,7 @@ class DVATracker extends Component {
       <Layout>
         <h1>DVA Tracker</h1>
         <div>Graph</div>
-        <div>Line for next purchase</div>
+        <NewPurchase />
         <PurchaseHistory purchases={this.state.purchases} />
       </Layout>
     )
