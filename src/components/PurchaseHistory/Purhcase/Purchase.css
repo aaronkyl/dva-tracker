@@ -1,0 +1,18 @@
+.Purchase {
+  width: 90%;
+  height: 50px;
+  padding: 0;
+  margin: 10px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  box-shadow: -1px 1px 2px #DFE3E4;
+  border: 1px solid #DFE3E4;
+}
+
+.Purchase div {
+  margin: 0 10px;
+  width: 100px;
+  text-align: center;
+}

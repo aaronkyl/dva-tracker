@@ -1,0 +1,9 @@
+.PurchaseHistory {
+  width: 100%;
+  max-width: 750px;
+  margin: auto;
+  box-shadow: -2px 0 2px #DFE3E4, 2px 0 2px #DFE3E4;
+  border: 1px solid #DFE3E4;
+  box-sizing: border-box;
+  background-color: white;
+}

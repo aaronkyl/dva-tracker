@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Aux from '../../hoc/Aux'
+import classes from './Layout.css'
 // import SideDrawer from '../Navigation/SideDrawer/SideDrawer'
 
 class Layout extends Component {
@@ -19,7 +20,7 @@ toggleSideDrawer = () => {
       <Aux>
         {/* <SideDrawer open={this.state.showSideDrawer} /> */}
         <p>toolbar goes here</p>
-        <main>
+        <main className={classes.Layout}>
           {this.props.children}
         </main>
       </Aux>
