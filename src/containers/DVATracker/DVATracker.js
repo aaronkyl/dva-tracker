@@ -37,7 +37,7 @@ class DVATracker extends Component {
 
   componentDidMount() {
     console.log('[componentDidMount()]')
-    axios.get('https://marketdata.websol.barchart.com/getQuote.json?apikey=9e1bc09f2b247ab26766715660f72cd8&symbols=' + this.state.symbol)
+    axios.get('https://marketdata.websol.barchart.com/getQuote.json?apikey=API_KEY_HERE&symbols=' + this.state.symbol)
       .then(response => {
         return response.data.results[0].lastPrice
       })
