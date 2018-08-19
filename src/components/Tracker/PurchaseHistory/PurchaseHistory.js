@@ -3,9 +3,9 @@ import classes from './PurchaseHistory.css'
 import Purchase from './Purchase/Purchase'
 
 const purchaseHistory = (props) => {
-  const purchases = props.purchases.map(purchase => {
+  const purchases = props.purchases.map((purchase, index) => {
     return <Purchase 
-      key={purchase.date + purchase.sharesPurchased}
+      key={index + purchase.date + purchase.sharesPurchased}
       date={purchase.date}
       sharePrice={purchase.sharePrice}
       sharesPurchased={purchase.sharesPurchased}
