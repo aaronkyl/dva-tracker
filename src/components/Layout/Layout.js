@@ -15,7 +15,6 @@ toggleSideDrawer = () => {
 }
 
   render() {
-    console.log(this.state.showSideDrawer)
     return (
       <Aux>
         {/* <SideDrawer open={this.state.showSideDrawer} /> */}

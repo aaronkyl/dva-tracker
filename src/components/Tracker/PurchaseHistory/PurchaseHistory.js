@@ -1,5 +1,6 @@
 import React from 'react'
 import classes from './PurchaseHistory.css'
+import PurchaseHeader from './PurchaseHeader/PurchaseHeader'
 import Purchase from './Purchase/Purchase'
 
 const purchaseHistory = (props) => {
@@ -16,6 +17,7 @@ const purchaseHistory = (props) => {
 
   return (
     <div className={classes.PurchaseHistory}>
+      <PurchaseHeader />
       {purchases}
     </div>
   )

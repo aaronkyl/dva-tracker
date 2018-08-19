@@ -1,0 +1,19 @@
+.PurchaseHeader {
+  width: 90%;
+  height: 50px;
+  padding: 0;
+  margin: 10px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid #DFE3E4;
+  font-size: .8rem;
+  letter-spacing: .1em;
+}
+
+.PurchaseHeader div {
+  margin: 0 10px;
+  width: 100px;
+  text-align: center;
+}

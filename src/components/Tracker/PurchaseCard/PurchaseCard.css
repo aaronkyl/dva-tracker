@@ -1,0 +1,6 @@
+.PurchaseCard {
+  width: 100%;
+  max-width: 750px;
+  margin: auto;
+  box-shadow: -1px 0 1px #DFE3E4, 1px 0 1px #DFE3E4;
+}
