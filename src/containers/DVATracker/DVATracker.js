@@ -18,7 +18,7 @@ class DVATracker extends Component {
       }, {
         date: '2018-08-14',
         sharePrice: 23.57,
-        sharesPurchased: 18,
+        sharesPurchased: 10,
         portfolioValue: 1839.80,
         comparison: 206.51
       }
@@ -26,8 +26,10 @@ class DVATracker extends Component {
     totalShares: null,
     totalValue: null,
     monthlyIncrement: 500,
+    dollarCostAveragingTarget: null,
     symbol: "AAPL",
-    currentPrice: null
+    currentPrice: null,
+    startDate: null
   }
 
   componentWillMount() {
@@ -52,6 +54,11 @@ class DVATracker extends Component {
         console.log(error)
         return error
       })
+    
+      axios.get('https://dva-tracker.firebaseio.com/startDates.json')
+        .then(response => {
+          console.log(response)
+        })
   }
 
   countTotalShares = () => {
@@ -75,7 +82,7 @@ class DVATracker extends Component {
         <h1>DVA Tracker</h1>
         <div>Graph</div>
         <PurchaseCard>
-          <NewPurchase symbol={this.state.symbol} currentPrice={this.state.currentPrice} />
+          <NewPurchase symbol={this.state.symbol} currentPrice={this.state.currentPrice} totalValue={this.state.totalValue}/>
           <PurchaseHistory purchases={this.state.purchases} />
         </PurchaseCard>
       </Layout>
