@@ -37,7 +37,7 @@ class DVATracker extends Component {
 
   componentDidMount() {
     console.log('[componentDidMount()]')
-    axios.get('https://marketdata.websol.barchart.com/getQuote.json?apikey=API_KEY_HERE&symbols=' + this.state.symbol)
+    axios.get('https://marketdata.websol.barchart.com/getQuote.json?apikey=' + process.env.REACT_APP_BARCHART_API_KEY + '&symbols=' + this.state.symbol)
       .then(response => {
         return response.data.results[0].lastPrice
       })
@@ -54,7 +54,7 @@ class DVATracker extends Component {
       })
   }
 
-  countTotalShares() {
+  countTotalShares = () => {
     console.log('[countTotalShares()]')
     let totalShares = 0
     this.state.purchases.forEach(purchase => {
@@ -63,7 +63,7 @@ class DVATracker extends Component {
     this.setState({totalShares: totalShares})
   }
 
-  calculateTotalValue(currentPrice) {
+  calculateTotalValue = (currentPrice) => {
     console.log('[this.calculateTotalValue()]')
     return this.state.totalShares * currentPrice
   }
