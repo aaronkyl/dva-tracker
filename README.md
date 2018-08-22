@@ -19,6 +19,7 @@ App to track the effectiveness of a DVA investment strategy and guide current in
 
 ### Unresolved project items
 
+- Info Board at top needs to refresh when a purchase is recorded
 - Site is in desperate need of styling
 - Implement a graph to show portfolio value vs target value over time; maybe use graph library used in boditraq
 - Add user authentication
