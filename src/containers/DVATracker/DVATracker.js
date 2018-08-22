@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 
 import Layout from '../../components/Layout/Layout'
+import InfoBoard from '../../components/Tracker/InfoBoard/InfoBoard'
 import PurchaseCard from '../../components/Tracker/PurchaseCard/PurchaseCard'
 import PurchaseHistory from '../../components/Tracker/PurchaseHistory/PurchaseHistory'
 import NewPurchase from '../../components/Tracker/NewPurchase/NewPurchase'
@@ -12,7 +13,7 @@ class DVATracker extends Component {
       {
         date: '2018-08-15',
         sharePrice: 23.57,
-        sharesPurchased: 18,
+        sharesPurchased: 1,
         portfolioValue: 3007.80,
         comparison: 206.51
       }, {
@@ -25,11 +26,16 @@ class DVATracker extends Component {
     ],
     totalShares: null,
     totalValue: null,
+    initialInvestment: 0,
     monthlyIncrement: 500,
     dollarCostAveragingTarget: null,
     symbol: "AAPL",
     currentPrice: null,
-    startDate: null
+    suggestedNoSharesToBuy: null,
+    startDate: '02/01/2018',
+    monthsSinceInception: 0,
+    targetValue: 0,
+    difference: 0
   }
 
   componentWillMount() {
@@ -43,11 +49,19 @@ class DVATracker extends Component {
       .then(response => {
         return response.data.results[0].lastPrice
       })
-      .then(lastPrice => {
-        let totalValue = this.calculateTotalValue(lastPrice)
+      .then(currentPrice => {
+        const totalValue = this.calculateTotalValue(currentPrice)
+        const months = this.countMonthsSinceInception()
+        const targetValue = this.calculateTargetValue(months)
+        const suggestedPurchase = this.calculateSuggestedPurchase(targetValue, totalValue, currentPrice)
+        const difference = this.calculateValueDifference(totalValue, targetValue)
         this.setState({
-          currentPrice: lastPrice,
-          totalValue: totalValue
+          currentPrice: currentPrice,
+          totalValue: totalValue,
+          monthsSinceInception: months,
+          targetValue: targetValue,
+          suggestedNoSharesToBuy: suggestedPurchase,
+          difference: difference
         })
       })
       .catch(error => {
@@ -61,6 +75,20 @@ class DVATracker extends Component {
         })
   }
 
+  calculateSuggestedPurchase = (targetValue, totalValue, currentPrice) => {
+    return ((targetValue - totalValue) / currentPrice).toFixed(1)
+  }
+
+  countMonthsSinceInception = () => {
+    const today = new Date()
+    const startDate = new Date(this.state.startDate)
+    const startYear = startDate.getFullYear()
+    const startMonth = startDate.getMonth()
+    const years = today.getFullYear() - startYear
+    const months = (years * 12) + (today.getMonth() - startMonth)
+    return months
+  }
+
   countTotalShares = () => {
     console.log('[countTotalShares()]')
     let totalShares = 0
@@ -72,7 +100,15 @@ class DVATracker extends Component {
 
   calculateTotalValue = (currentPrice) => {
     console.log('[this.calculateTotalValue()]')
-    return this.state.totalShares * currentPrice
+    return (this.state.totalShares * currentPrice).toFixed(2)
+  }
+
+  calculateTargetValue = (months) => {
+    return (months * this.state.monthlyIncrement + this.state.initialInvestment).toFixed(2)
+  }
+
+  calculateValueDifference = (currentValue, targetValue) => {
+    return (currentValue - targetValue).toFixed(2)
   }
 
   render() {
@@ -82,7 +118,17 @@ class DVATracker extends Component {
         <h1>DVA Tracker</h1>
         <div>Graph</div>
         <PurchaseCard>
-          <NewPurchase symbol={this.state.symbol} currentPrice={this.state.currentPrice} totalValue={this.state.totalValue}/>
+          <InfoBoard 
+            tickerSymbol={this.state.symbol}
+            currentPrice={this.state.currentPrice}
+            currentValue={this.state.totalValue}
+            targetValue={this.state.targetValue}
+            difference={this.state.difference}/>
+          <NewPurchase 
+            symbol={this.state.symbol} 
+            currentPrice={this.state.currentPrice} 
+            suggestedPurchase={this.state.suggestedNoSharesToBuy}
+            totalValue={this.state.totalValue}/>
           <PurchaseHistory purchases={this.state.purchases} />
         </PurchaseCard>
       </Layout>

@@ -1,0 +1,24 @@
+.InfoBoard {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+  min-height: 75px;
+}
+
+td {
+  padding: 2px 5px;
+}
+
+.TableHeader {
+  font-weight: bold;
+  text-align: right;
+}
+
+.Red {
+  color: red;
+}
+
+.Green {
+  color: green;
+}
