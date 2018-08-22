@@ -35,7 +35,7 @@ class newPurchase extends Component {
 
       axios.post("https://dva-tracker.firebaseio.com/purchases.json", purchaseDetails)
         .then(response => {
-          this.props.fetchData()
+          this.props.fetchPurchases()
           console.log(response)
         })
         .catch(error => {

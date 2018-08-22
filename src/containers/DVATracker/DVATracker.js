@@ -26,21 +26,25 @@ class DVATracker extends Component {
 
   componentWillMount() {
     console.log('[componentWillMount()]')
-    axios.get('https://dva-tracker.firebaseio.com/purchases.json')
-      .then(response => {
-        const purchases = Object.keys(response.data)
-          .map(purchase => response.data[purchase])
-        this.setState({purchases: purchases})
-      })
-      .catch(error => {
-        console.log(error)
-        return error
-      })
+    this.fetchPurchases()
   }
 
   componentDidMount() {
     console.log('[componentDidMount()]')
     this.fetchData()
+  }
+
+  fetchPurchases = () => {
+    axios.get('https://dva-tracker.firebaseio.com/purchases.json')
+    .then(response => {
+      const purchases = Object.keys(response.data)
+        .map(purchase => response.data[purchase])
+      this.setState({purchases: purchases})
+    })
+    .catch(error => {
+      console.log(error)
+      return error
+    })
   }
 
   fetchData = () => {
@@ -68,8 +72,7 @@ class DVATracker extends Component {
         targetValue: targetValue,
         suggestedNoSharesToBuy: suggestedPurchase,
         difference: difference,
-        totalShares: totalShares,
-        trigger: false
+        totalShares: totalShares
       })
     }))
     .catch(error => console.log(error)) 
@@ -129,8 +132,8 @@ class DVATracker extends Component {
             currentPrice={this.state.currentPrice} 
             suggestedPurchase={this.state.suggestedNoSharesToBuy}
             totalValue={this.state.totalValue}
-            fetchData={this.fetchData}/>
-          <PurchaseHistory purchases={this.state.purchases} loadPurchaseHistory={this.loadPurchaseHistory}/>
+            fetchPurchases={this.fetchPurchases}/>
+          <PurchaseHistory purchases={this.state.purchases} />
         </PurchaseCard>
       </Layout>
     )
