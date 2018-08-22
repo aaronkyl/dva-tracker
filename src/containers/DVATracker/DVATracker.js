@@ -9,21 +9,7 @@ import NewPurchase from '../../components/Tracker/NewPurchase/NewPurchase'
 
 class DVATracker extends Component {
   state = {
-    purchases: [
-      {
-        date: '2018-08-15',
-        sharePrice: 23.57,
-        sharesPurchased: 1,
-        portfolioValue: 3007.80,
-        comparison: 206.51
-      }, {
-        date: '2018-08-14',
-        sharePrice: 23.57,
-        sharesPurchased: 10,
-        portfolioValue: 1839.80,
-        comparison: 206.51
-      }
-    ],
+    purchases: [],
     totalShares: null,
     totalValue: null,
     initialInvestment: 0,
@@ -40,39 +26,53 @@ class DVATracker extends Component {
 
   componentWillMount() {
     console.log('[componentWillMount()]')
-    this.countTotalShares()
-  }
-
-  componentDidMount() {
-    console.log('[componentDidMount()]')
-    axios.get('https://marketdata.websol.barchart.com/getQuote.json?apikey=' + process.env.REACT_APP_BARCHART_API_KEY + '&symbols=' + this.state.symbol)
+    axios.get('https://dva-tracker.firebaseio.com/purchases.json')
       .then(response => {
-        return response.data.results[0].lastPrice
-      })
-      .then(currentPrice => {
-        const totalValue = this.calculateTotalValue(currentPrice)
-        const months = this.countMonthsSinceInception()
-        const targetValue = this.calculateTargetValue(months)
-        const suggestedPurchase = this.calculateSuggestedPurchase(targetValue, totalValue, currentPrice)
-        const difference = this.calculateValueDifference(totalValue, targetValue)
-        this.setState({
-          currentPrice: currentPrice,
-          totalValue: totalValue,
-          monthsSinceInception: months,
-          targetValue: targetValue,
-          suggestedNoSharesToBuy: suggestedPurchase,
-          difference: difference
-        })
+        const purchases = Object.keys(response.data)
+          .map(purchase => response.data[purchase])
+        this.setState({purchases: purchases})
       })
       .catch(error => {
         console.log(error)
         return error
       })
-    
-      axios.get('https://dva-tracker.firebaseio.com/startDates.json')
-        .then(response => {
-          console.log(response)
-        })
+  }
+
+  componentDidMount() {
+    console.log('[componentDidMount()]')
+    this.fetchData()
+  }
+
+  fetchData = () => {
+    axios.all([
+      axios.get('https://dva-tracker.firebaseio.com/purchases.json'),
+      axios.get('https://marketdata.websol.barchart.com/getQuote.json?apikey=' + process.env.REACT_APP_BARCHART_API_KEY + '&symbols=' + this.state.symbol)
+    ])
+    .then(axios.spread((purchasesRes, barchartRes) => {
+      console.log(purchasesRes)
+      console.log(barchartRes)
+      const purchases = Object.keys(purchasesRes.data)
+        .map(purchase => purchasesRes.data[purchase])
+        console.log('purchases', purchases)
+      const currentPrice = barchartRes.data.results[0].lastPrice
+      const totalShares = this.countTotalShares(purchases)
+      const totalValue = this.calculateTotalValue(currentPrice, totalShares)
+      const months = this.countMonthsSinceInception()
+      const targetValue = this.calculateTargetValue(months)
+      const suggestedPurchase = this.calculateSuggestedPurchase(targetValue, totalValue, currentPrice)
+      const difference = this.calculateValueDifference(totalValue, targetValue)
+      this.setState({
+        currentPrice: currentPrice,
+        totalValue: totalValue,
+        monthsSinceInception: months,
+        targetValue: targetValue,
+        suggestedNoSharesToBuy: suggestedPurchase,
+        difference: difference,
+        totalShares: totalShares,
+        trigger: false
+      })
+    }))
+    .catch(error => console.log(error)) 
   }
 
   calculateSuggestedPurchase = (targetValue, totalValue, currentPrice) => {
@@ -89,18 +89,18 @@ class DVATracker extends Component {
     return months
   }
 
-  countTotalShares = () => {
-    console.log('[countTotalShares()]')
+  countTotalShares = (purchases) => {
+    console.log('[countTotalShares()]', purchases)
     let totalShares = 0
-    this.state.purchases.forEach(purchase => {
-      totalShares = totalShares + purchase.sharesPurchased
+    purchases.forEach(purchase => {
+      totalShares = totalShares + +purchase.sharesPurchased
     })
-    this.setState({totalShares: totalShares})
+    return totalShares
   }
 
-  calculateTotalValue = (currentPrice) => {
+  calculateTotalValue = (currentPrice, totalShares) => {
     console.log('[this.calculateTotalValue()]')
-    return (this.state.totalShares * currentPrice).toFixed(2)
+    return (totalShares * currentPrice).toFixed(2)
   }
 
   calculateTargetValue = (months) => {
@@ -128,8 +128,9 @@ class DVATracker extends Component {
             symbol={this.state.symbol} 
             currentPrice={this.state.currentPrice} 
             suggestedPurchase={this.state.suggestedNoSharesToBuy}
-            totalValue={this.state.totalValue}/>
-          <PurchaseHistory purchases={this.state.purchases} />
+            totalValue={this.state.totalValue}
+            fetchData={this.fetchData}/>
+          <PurchaseHistory purchases={this.state.purchases} loadPurchaseHistory={this.loadPurchaseHistory}/>
         </PurchaseCard>
       </Layout>
     )
