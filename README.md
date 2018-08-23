@@ -14,7 +14,7 @@ App to track the effectiveness of a DVA investment strategy and guide current in
 ### Issues faced during this project
 
 - Lifecycle hooks. In trying to create the app without using Redux I had to figure out how to make API calls without causing infinite loops.
-- Ensuring that the app wasn't re-rendering unnecessarily. This could still use some work as I'm sure the app is still re-rendering when it's not necessary.
+- Ensuring that the app wasn't re-rendering unnecessarily. This could still use some work as I'm sure the app is still occasionally re-rendering when it's not necessary.
 
 
 ### Unresolved project items
